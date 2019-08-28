@@ -744,8 +744,9 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     } else if (group === 'right') {
       const bodyWidth = parseInt(this.innerWidth + '', 0);
       const totalDiff = widths.total - bodyWidth;
-      const offsetDiff = totalDiff - offsetX;
-      const offset = offsetDiff * -1;
+     // const offsetDiff = totalDiff - offsetX;
+     // const offset = offsetDiff * -1;
+      const offset = totalDiff * -1;
       translateXY(styles, offset, 0);
     }
 

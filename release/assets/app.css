@@ -300,3 +300,7 @@ select {
 	font-weight: bold;
 	background-color: #ffeb3b;
 }
+
+.width-50{
+  width: 500px;
+}

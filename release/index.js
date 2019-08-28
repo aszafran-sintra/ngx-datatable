@@ -1805,8 +1805,9 @@ var DataTableBodyComponent = /** @class */ (function () {
         else if (group === 'right') {
             var bodyWidth = parseInt(this.innerWidth + '', 0);
             var totalDiff = widths.total - bodyWidth;
-            var offsetDiff = totalDiff - offsetX;
-            var offset = offsetDiff * -1;
+            // const offsetDiff = totalDiff - offsetX;
+            // const offset = offsetDiff * -1;
+            var offset = totalDiff * -1;
             utils_1.translateXY(styles, offset, 0);
         }
         return styles;
