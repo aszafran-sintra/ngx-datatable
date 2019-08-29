@@ -101,7 +101,6 @@ $datatable-summary-row-background-hover: #ddd !default;
 
   &:not(.cell-selection) {
     .datatable-body-row {
-      border-bottom: 1px solid black;
       &:hover,
 			&:hover .datatable-row-group {
 	      background-color: $ngx-datatable-default-background-hover;
