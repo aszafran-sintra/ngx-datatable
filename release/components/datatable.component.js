@@ -639,9 +639,9 @@ var DatatableComponent = /** @class */ (function () {
         if (!columns)
             return undefined;
         var width = this._innerWidth;
-        if (this.scrollbarV) {
-            width = width - this.scrollbarHelper.width;
-        }
+        // if (this.scrollbarV) {
+        width = width - this.scrollbarHelper.width;
+        // }
         if (this.columnMode === types_1.ColumnMode.force) {
             utils_1.forceFillColumnWidths(columns, width, forceIdx, allowBleed);
         }

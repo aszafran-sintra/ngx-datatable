@@ -106,7 +106,8 @@ export class DataTableBodyRowComponent implements DoCheck {
 
   @HostBinding('style.width.px')
   get columnsTotalWidths(): string {
-    return this._columnGroupWidths.total;
+    // fix for missing pixels :)
+    return this._columnGroupWidths.total + 17;
   }
 
   @Output() activate: EventEmitter<any> = new EventEmitter();
