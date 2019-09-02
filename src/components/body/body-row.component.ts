@@ -106,7 +106,8 @@ export class DataTableBodyRowComponent implements DoCheck {
 
   @HostBinding('style.width.px')
   get columnsTotalWidths(): string {
-    return this._columnGroupWidths.total;
+    // FIX: return this._columnGroupWidths.total;
+    return this._columnGroupWidths.total + 17;
   }
 
   @Output() activate: EventEmitter<any> = new EventEmitter();
@@ -170,7 +171,8 @@ export class DataTableBodyRowComponent implements DoCheck {
       const bodyWidth = parseInt(this.innerWidth + '', 0);
       const totalDiff = widths.total - bodyWidth;
       const offsetDiff = totalDiff - offsetX;
-      const offset = (offsetDiff + this.scrollbarHelper.width) * -1;
+      // FIX: const offset = (offsetDiff + this.scrollbarHelper.width) * -1;
+      const offset = offsetDiff * -1;
       translateXY(styles, offset, 0);
     }
 

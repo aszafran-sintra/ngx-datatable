@@ -99,7 +99,8 @@ var DataTableBodyRowComponent = /** @class */ (function () {
     });
     Object.defineProperty(DataTableBodyRowComponent.prototype, "columnsTotalWidths", {
         get: function () {
-            return this._columnGroupWidths.total;
+            // FIX: return this._columnGroupWidths.total;
+            return this._columnGroupWidths.total + 17;
         },
         enumerable: true,
         configurable: true
@@ -134,7 +135,8 @@ var DataTableBodyRowComponent = /** @class */ (function () {
             var bodyWidth = parseInt(this.innerWidth + '', 0);
             var totalDiff = widths.total - bodyWidth;
             var offsetDiff = totalDiff - offsetX;
-            var offset = (offsetDiff + this.scrollbarHelper.width) * -1;
+            // FIX: const offset = (offsetDiff + this.scrollbarHelper.width) * -1;
+            var offset = offsetDiff * -1;
             utils_1.translateXY(styles, offset, 0);
         }
         return styles;
