@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'column-force-demo',
   template: `
-    <div>
+    <div style="width:800px; max-width:800px">
       <h3>
         Force Fill Column Width Distribution
         <small>
@@ -17,23 +17,50 @@ import { Component } from '@angular/core';
         [columnMode]="'force'"
         [headerHeight]="50"
         [footerHeight]="50"
-        [rowHeight]="'auto'"
+        [rowHeight]="100"
+        [scrollbarH]="true"
+        [virtualization]="false"
         [rows]="rows">
-        <ngx-datatable-column name="Name" [width]="100">
+        <ngx-datatable-column name="Name" [width]="100" [minWidth]="100" [resizeable]="false" [frozenLeft]="true">
           <ng-template let-value="value" ngx-datatable-cell-template>
             {{value}}
           </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Gender" [width]="100">
+        <ngx-datatable-column name="Gender" [width]="100" [minWidth]="100" [resizeable]="false">
           <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
             {{value}}
           </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Age" [width]="300">
+        <ngx-datatable-column name="Age" [width]="300" [minWidth]="300" [resizeable]="false">
           <ng-template let-value="value" ngx-datatable-cell-template>
             {{value}}
           </ng-template>
         </ngx-datatable-column>
+        <ngx-datatable-column name="Age" [width]="300" [minWidth]="300" prop="gender" [resizeable]="false">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{value}}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Age" [width]="300" [minWidth]="300" prop="gender" [resizeable]="false">
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{value}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Age" [width]="300" [minWidth]="300" prop="gender" [resizeable]="false">
+    <ng-template let-value="value" ngx-datatable-cell-template>
+      {{value}}
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="Age" [width]="300" [minWidth]="300" prop="gender" [resizeable]="false">
+  <ng-template let-value="value" ngx-datatable-cell-template>
+    {{value}}
+  </ng-template>
+</ngx-datatable-column>
+<ngx-datatable-column name="FrozenRight" [width]="300" [minWidth]="300" prop="gender" [frozenRight]="true" [resizeable]="false">
+<ng-template let-value="value" ngx-datatable-cell-template>
+  {{value}}
+</ng-template>
+</ngx-datatable-column>
       </ngx-datatable>
     </div>
   `

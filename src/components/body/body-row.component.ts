@@ -161,21 +161,37 @@ export class DataTableBodyRowComponent implements DoCheck {
     const widths = this._columnGroupWidths;
     const offsetX = this.offsetX;
 
-    const styles = {
+    let styles = {
       width: `${widths[group]}px`
     };
 
     if (group === 'left') {
-      translateXY(styles, offsetX, 0);
+      //translateXY(styles, offsetX, 0);
+      styles = {
+        ...styles,
+        position: 'absolute',
+        left: 0
+      }
     } else if (group === 'right') {
-      const bodyWidth = parseInt(this.innerWidth + '', 0);
-      const totalDiff = widths.total - bodyWidth;
-      const offsetDiff = totalDiff - offsetX;
+      // const bodyWidth = parseInt(this.innerWidth + '', 0);
+      // const totalDiff = widths.total - bodyWidth;
+      // const offsetDiff = totalDiff - offsetX;
       // FIX: const offset = (offsetDiff + this.scrollbarHelper.width) * -1;
-      const offset = offsetDiff * -1;
-      translateXY(styles, offset, 0);
-    }
+      //const offset = offsetDiff * -1;
+      //translateXY(styles, offset, 0);
 
+      styles = {
+        ...styles,
+        position: 'absolute',
+        right: 0
+      };
+    } else {
+      styles = {
+        ...styles,
+        marginLeft: widths['left'] ? `${widths['left']}px` : undefined
+      }
+    }
+    
     return styles;
   }
 
