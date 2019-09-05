@@ -11,7 +11,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 export declare class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
     private scrollbarHelper;
     private dimensionsHelper;
-    private cd;
+    cd: ChangeDetectorRef;
     private columnChangesService;
     /**
      * Template for the target marker of drag target columns.
@@ -429,6 +429,18 @@ export declare class DatatableComponent implements OnInit, DoCheck, AfterViewIni
      * Also can be manually invoked or upon window resize.
      */
     recalculate(): void;
+    /**
+       * Recalc's the sizes of the grid.
+       *
+       * Updated automatically on changes to:
+       *
+       *  - Columns
+       *  - Rows
+       *  - Paging related
+       *
+       * Also can be manually invoked or upon window resize.
+       */
+    recalculateAll(): void;
     /**
      * Window resize handler to update sizes.
      */

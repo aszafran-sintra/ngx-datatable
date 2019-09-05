@@ -711,7 +711,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
   constructor(
     @SkipSelf() private scrollbarHelper: ScrollbarHelper,
     @SkipSelf() private dimensionsHelper: DimensionsHelper,
-    private cd: ChangeDetectorRef,
+    public cd: ChangeDetectorRef,
     element: ElementRef,
     differs: KeyValueDiffers,
     private columnChangesService: ColumnChangesService) {
@@ -857,6 +857,21 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
     this.recalculateColumns();
   }
 
+  /**
+     * Recalc's the sizes of the grid.
+     *
+     * Updated automatically on changes to:
+     *
+     *  - Columns
+     *  - Rows
+     *  - Paging related
+     *
+     * Also can be manually invoked or upon window resize.
+     */
+  recalculateAll(): void{
+    this.recalculate();
+    this.cd.detectChanges();
+  }
   /**
    * Window resize handler to update sizes.
    */

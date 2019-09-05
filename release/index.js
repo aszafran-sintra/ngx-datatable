@@ -3410,6 +3410,21 @@ var DatatableComponent = /** @class */ (function () {
         this.recalculateColumns();
     };
     /**
+       * Recalc's the sizes of the grid.
+       *
+       * Updated automatically on changes to:
+       *
+       *  - Columns
+       *  - Rows
+       *  - Paging related
+       *
+       * Also can be manually invoked or upon window resize.
+       */
+    DatatableComponent.prototype.recalculateAll = function () {
+        this.recalculate();
+        this.cd.detectChanges();
+    };
+    /**
      * Window resize handler to update sizes.
      */
     DatatableComponent.prototype.onWindowResize = function () {
