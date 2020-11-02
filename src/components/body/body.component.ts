@@ -8,20 +8,20 @@ import {
   ViewChild,
   OnInit,
   OnDestroy,
-  ChangeDetectionStrategy
-} from '@angular/core';
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import {
   translateXY,
   columnsByPin,
   columnGroupWidths,
-  RowHeightCache
-} from '../../utils';
-import { SelectionType } from '../../types';
-import { ScrollerComponent } from './scroller.component';
-import { MouseEvent } from '../../events';
+  RowHeightCache,
+} from "../../utils";
+import { SelectionType } from "../../types";
+import { ScrollerComponent } from "./scroller.component";
+import { MouseEvent } from "../../events";
 
 @Component({
-  selector: 'datatable-body',
+  selector: "datatable-body",
   template: `
     <datatable-selection
       #selector
@@ -127,8 +127,8 @@ import { MouseEvent } from '../../events';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'datatable-body'
-  }
+    class: "datatable-body",
+  },
 })
 export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Input() scrollbarV: boolean;
@@ -155,6 +155,14 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Input() summaryRow: boolean;
   @Input() summaryPosition: string;
   @Input() summaryHeight: number;
+
+  @Input() set treeRowsCount(val: number) {
+    if (this._treeRowsCount === val) {
+      return;
+    }
+    this._treeRowsCount = val;
+    this.recalcLayout();
+  }
 
   @Input() set pageSize(val: number) {
     this._pageSize = val;
@@ -200,25 +208,25 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   get rowCount(): number {
-    return this._rowCount;
+    return this._treeRowsCount ? this._treeRowsCount : this._rowCount;
   }
 
-  @HostBinding('style.width')
+  @HostBinding("style.width")
   get bodyWidth(): string {
     if (this.scrollbarH) {
-      return this.innerWidth + 'px';
+      return this.innerWidth + "px";
     } else {
-      return '100%';
+      return "100%";
     }
   }
 
   @Input()
-  @HostBinding('style.height')
+  @HostBinding("style.height")
   set bodyHeight(val) {
     if (this.scrollbarV) {
-      this._bodyHeight = val + 'px';
+      this._bodyHeight = val + "px";
     } else {
-      this._bodyHeight = 'auto';
+      this._bodyHeight = "auto";
     }
 
     this.recalcLayout();
@@ -277,7 +285,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   _rowCount: number;
   _offset: number;
   _pageSize: number;
-
+  _treeRowsCount: number;
   /**
    * Creates an instance of DataTableBodyComponent.
    */
@@ -300,8 +308,8 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     if (this.rowDetail) {
       this.listener = this.rowDetail.toggle.subscribe(
         ({ type, value }: { type: string; value: any }) => {
-          if (type === 'row') this.toggleRowExpansion(value);
-          if (type === 'all') this.toggleAllRows(value);
+          if (type === "row") this.toggleRowExpansion(value);
+          if (type === "all") this.toggleAllRows(value);
 
           // Refresh rows after toggle
           // Fixes #883
@@ -315,8 +323,8 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     if (this.groupHeader) {
       this.listener = this.groupHeader.toggle.subscribe(
         ({ type, value }: { type: string; value: any }) => {
-          if (type === 'group') this.toggleRowExpansion(value);
-          if (type === 'all') this.toggleAllRows(value);
+          if (type === "group") this.toggleRowExpansion(value);
+          if (type === "all") this.toggleAllRows(value);
 
           // Refresh rows after toggle
           // Fixes #883
@@ -367,7 +375,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     if (this.offsetY !== scrollYPos || this.offsetX !== scrollXPos) {
       this.scroll.emit({
         offsetY: scrollYPos,
-        offsetX: scrollXPos
+        offsetX: scrollXPos,
       });
     }
 
@@ -385,9 +393,9 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   updatePage(direction: string): void {
     let offset = this.indexes.first / this.pageSize;
 
-    if (direction === 'up') {
+    if (direction === "up") {
       offset = Math.ceil(offset);
-    } else if (direction === 'down') {
+    } else if (direction === "down") {
       offset = Math.floor(offset);
     }
 
@@ -449,7 +457,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
    */
   getRowHeight(row: any): number {
     // if its a function return it
-    if (typeof this.rowHeight === 'function') {
+    if (typeof this.rowHeight === "function") {
       return this.rowHeight(row);
     }
 
@@ -492,8 +500,8 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   getDetailRowHeight = (row?: any, index?: any): number => {
     if (!this.rowDetail) return 0;
     const rowHeight = this.rowDetail.rowHeight;
-    return typeof rowHeight === 'function' ? rowHeight(row, index) : rowHeight;
-  }
+    return typeof rowHeight === "function" ? rowHeight(row, index) : rowHeight;
+  };
 
   /**
    * Calculates the styles for the row so that the rows can be moved in 2D space
@@ -520,7 +528,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
 
     // only add styles for the group if there is a group
     if (this.groupedRows) {
-      styles['width'] = this.columnGroupWidths.total;
+      styles["width"] = this.columnGroupWidths.total;
     }
 
     if (this.scrollbarV && this.virtualization) {
@@ -559,7 +567,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
       return null;
     }
 
-    const styles = { position: 'absolute' };
+    const styles = { position: "absolute" };
     const pos = this.rowHeightsCache.query(this.rows.length - 1);
 
     translateXY(styles, 0, pos);
@@ -601,7 +609,10 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
       if (!this.externalPaging) {
         first = Math.max(this.offset * this.pageSize, 0);
       }
-      last = Math.min(first + this.pageSize, this.rowCount);
+
+      last = this._treeRowsCount
+        ? this._treeRowsCount
+        : Math.min(first + this.pageSize, this.rowCount);
     }
 
     this.indexes = { first, last };
@@ -628,7 +639,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
         externalVirtual: this.scrollbarV && this.externalPaging,
         rowCount: this.rowCount,
         rowIndexes: this.rowIndexes,
-        rowExpansions: this.rowExpansions
+        rowExpansions: this.rowExpansions,
       });
     }
   }
@@ -680,7 +691,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
 
     this.detailToggle.emit({
       rows: [row],
-      currentIndex: viewPortFirstRowIndex
+      currentIndex: viewPortFirstRowIndex,
     });
   }
 
@@ -708,7 +719,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     // Emit all rows that have been expanded.
     this.detailToggle.emit({
       rows: this.rows,
-      currentIndex: viewPortFirstRowIndex
+      currentIndex: viewPortFirstRowIndex,
     });
   }
 
@@ -736,13 +747,13 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     const offsetX = this.offsetX;
 
     const styles = {
-      width: `${widths[group]}px`
+      width: `${widths[group]}px`,
     };
 
-    if (group === 'left') {
+    if (group === "left") {
       translateXY(styles, offsetX, 0);
-    } else if (group === 'right') {
-      const bodyWidth = parseInt(this.innerWidth + '', 0);
+    } else if (group === "right") {
+      const bodyWidth = parseInt(this.innerWidth + "", 0);
       const totalDiff = widths.total - bodyWidth;
       const offsetDiff = totalDiff - offsetX;
       const offset = offsetDiff * -1;

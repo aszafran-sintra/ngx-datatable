@@ -19,7 +19,11 @@
     "suppressExcessPropertyErrors": true,
     "suppressImplicitAnyIndexErrors": true,
     "outDir": "dist",
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es6",
+      "dom",
+      "es2017"
+    ],
     "skipLibCheck": true
   },
   "files": [

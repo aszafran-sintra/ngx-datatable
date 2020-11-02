@@ -20,7 +20,11 @@
     "suppressImplicitAnyIndexErrors": true,
     "outDir": "release",
     "declarationDir": "release",
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es6",
+      "dom",
+      "es2017"
+    ],
     "skipLibCheck": true,
     "types": []
   },
@@ -41,6 +45,6 @@
     "genDir": "release/",
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
-	"annotationsAs": "decorators"
+    "annotationsAs": "decorators"
   }
 }

@@ -1,13 +1,13 @@
-import { ElementRef, EventEmitter, OnInit, QueryList, AfterViewInit, DoCheck, KeyValueDiffers, KeyValueDiffer, ChangeDetectorRef } from '@angular/core';
-import { ScrollbarHelper, DimensionsHelper, ColumnChangesService } from '../services';
-import { ColumnMode, SortType, SelectionType, TableColumn, ContextmenuType } from '../types';
-import { DataTableBodyComponent } from './body';
-import { DatatableGroupHeaderDirective } from './body/body-group-header.directive';
-import { DataTableColumnDirective } from './columns';
-import { DatatableRowDetailDirective } from './row-detail';
-import { DatatableFooterDirective } from './footer';
-import { DataTableHeaderComponent } from './header';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { ElementRef, EventEmitter, OnInit, QueryList, AfterViewInit, DoCheck, KeyValueDiffers, KeyValueDiffer, ChangeDetectorRef } from "@angular/core";
+import { ScrollbarHelper, DimensionsHelper, ColumnChangesService } from "../services";
+import { ColumnMode, SortType, SelectionType, TableColumn, ContextmenuType } from "../types";
+import { DataTableBodyComponent } from "./body";
+import { DatatableGroupHeaderDirective } from "./body/body-group-header.directive";
+import { DataTableColumnDirective } from "./columns";
+import { DatatableRowDetailDirective } from "./row-detail";
+import { DatatableFooterDirective } from "./footer";
+import { DataTableHeaderComponent } from "./header";
+import { BehaviorSubject, Subscription } from "rxjs";
 export declare class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
     private scrollbarHelper;
     private dimensionsHelper;
@@ -386,6 +386,7 @@ export declare class DatatableComponent implements OnInit, DoCheck, AfterViewIni
     _columns: TableColumn[];
     _columnTemplates: QueryList<DataTableColumnDirective>;
     _subscriptions: Subscription[];
+    _treeRowsCount: number;
     constructor(scrollbarHelper: ScrollbarHelper, dimensionsHelper: DimensionsHelper, cd: ChangeDetectorRef, element: ElementRef, differs: KeyValueDiffers, columnChangesService: ColumnChangesService);
     /**
      * Lifecycle hook that is called after data-bound
@@ -430,16 +431,16 @@ export declare class DatatableComponent implements OnInit, DoCheck, AfterViewIni
      */
     recalculate(): void;
     /**
-       * Recalc's the sizes of the grid.
-       *
-       * Updated automatically on changes to:
-       *
-       *  - Columns
-       *  - Rows
-       *  - Paging related
-       *
-       * Also can be manually invoked or upon window resize.
-       */
+     * Recalc's the sizes of the grid.
+     *
+     * Updated automatically on changes to:
+     *
+     *  - Columns
+     *  - Rows
+     *  - Paging related
+     *
+     * Also can be manually invoked or upon window resize.
+     */
     recalculateAll(): void;
     /**
      * Window resize handler to update sizes.
@@ -460,6 +461,7 @@ export declare class DatatableComponent implements OnInit, DoCheck, AfterViewIni
      * Recalculates the pages after a update.
      */
     recalculatePages(): void;
+    recalculateTreeRows(): void;
     /**
      * Body triggered a page event.
      */

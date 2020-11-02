@@ -1,7 +1,7 @@
-import { EventEmitter, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { RowHeightCache } from '../../utils';
-import { SelectionType } from '../../types';
-import { ScrollerComponent } from './scroller.component';
+import { EventEmitter, ChangeDetectorRef, OnInit, OnDestroy } from "@angular/core";
+import { RowHeightCache } from "../../utils";
+import { SelectionType } from "../../types";
+import { ScrollerComponent } from "./scroller.component";
 export declare class DataTableBodyComponent implements OnInit, OnDestroy {
     private cd;
     scrollbarV: boolean;
@@ -28,6 +28,7 @@ export declare class DataTableBodyComponent implements OnInit, OnDestroy {
     summaryRow: boolean;
     summaryPosition: string;
     summaryHeight: number;
+    treeRowsCount: number;
     pageSize: number;
     rows: any[];
     columns: any[];
@@ -72,6 +73,7 @@ export declare class DataTableBodyComponent implements OnInit, OnDestroy {
     _rowCount: number;
     _offset: number;
     _pageSize: number;
+    _treeRowsCount: number;
     /**
      * Creates an instance of DataTableBodyComponent.
      */

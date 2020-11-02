@@ -41,7 +41,7 @@ var DataTableBodyComponent = /** @class */ (function () {
             if (!_this.rowDetail)
                 return 0;
             var rowHeight = _this.rowDetail.rowHeight;
-            return typeof rowHeight === 'function' ? rowHeight(row, index) : rowHeight;
+            return typeof rowHeight === "function" ? rowHeight(row, index) : rowHeight;
         };
         // declare fn here so we can get access to the `this` property
         this.rowTrackingFn = function (index, row) {
@@ -54,6 +54,17 @@ var DataTableBodyComponent = /** @class */ (function () {
             }
         };
     }
+    Object.defineProperty(DataTableBodyComponent.prototype, "treeRowsCount", {
+        set: function (val) {
+            if (this._treeRowsCount === val) {
+                return;
+            }
+            this._treeRowsCount = val;
+            this.recalcLayout();
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(DataTableBodyComponent.prototype, "pageSize", {
         get: function () {
             return this._pageSize;
@@ -102,7 +113,7 @@ var DataTableBodyComponent = /** @class */ (function () {
     });
     Object.defineProperty(DataTableBodyComponent.prototype, "rowCount", {
         get: function () {
-            return this._rowCount;
+            return this._treeRowsCount ? this._treeRowsCount : this._rowCount;
         },
         set: function (val) {
             this._rowCount = val;
@@ -114,10 +125,10 @@ var DataTableBodyComponent = /** @class */ (function () {
     Object.defineProperty(DataTableBodyComponent.prototype, "bodyWidth", {
         get: function () {
             if (this.scrollbarH) {
-                return this.innerWidth + 'px';
+                return this.innerWidth + "px";
             }
             else {
-                return '100%';
+                return "100%";
             }
         },
         enumerable: true,
@@ -129,10 +140,10 @@ var DataTableBodyComponent = /** @class */ (function () {
         },
         set: function (val) {
             if (this.scrollbarV) {
-                this._bodyHeight = val + 'px';
+                this._bodyHeight = val + "px";
             }
             else {
-                this._bodyHeight = 'auto';
+                this._bodyHeight = "auto";
             }
             this.recalcLayout();
         },
@@ -173,9 +184,9 @@ var DataTableBodyComponent = /** @class */ (function () {
         if (this.rowDetail) {
             this.listener = this.rowDetail.toggle.subscribe(function (_a) {
                 var type = _a.type, value = _a.value;
-                if (type === 'row')
+                if (type === "row")
                     _this.toggleRowExpansion(value);
-                if (type === 'all')
+                if (type === "all")
                     _this.toggleAllRows(value);
                 // Refresh rows after toggle
                 // Fixes #883
@@ -187,9 +198,9 @@ var DataTableBodyComponent = /** @class */ (function () {
         if (this.groupHeader) {
             this.listener = this.groupHeader.toggle.subscribe(function (_a) {
                 var type = _a.type, value = _a.value;
-                if (type === 'group')
+                if (type === "group")
                     _this.toggleRowExpansion(value);
-                if (type === 'all')
+                if (type === "all")
                     _this.toggleAllRows(value);
                 // Refresh rows after toggle
                 // Fixes #883
@@ -237,7 +248,7 @@ var DataTableBodyComponent = /** @class */ (function () {
         if (this.offsetY !== scrollYPos || this.offsetX !== scrollXPos) {
             this.scroll.emit({
                 offsetY: scrollYPos,
-                offsetX: scrollXPos
+                offsetX: scrollXPos,
             });
         }
         this.offsetY = scrollYPos;
@@ -251,10 +262,10 @@ var DataTableBodyComponent = /** @class */ (function () {
      */
     DataTableBodyComponent.prototype.updatePage = function (direction) {
         var offset = this.indexes.first / this.pageSize;
-        if (direction === 'up') {
+        if (direction === "up") {
             offset = Math.ceil(offset);
         }
-        else if (direction === 'down') {
+        else if (direction === "down") {
             offset = Math.floor(offset);
         }
         if (direction !== undefined && !isNaN(offset)) {
@@ -307,7 +318,7 @@ var DataTableBodyComponent = /** @class */ (function () {
      */
     DataTableBodyComponent.prototype.getRowHeight = function (row) {
         // if its a function return it
-        if (typeof this.rowHeight === 'function') {
+        if (typeof this.rowHeight === "function") {
             return this.rowHeight(row);
         }
         return this.rowHeight;
@@ -360,7 +371,7 @@ var DataTableBodyComponent = /** @class */ (function () {
         var styles = {};
         // only add styles for the group if there is a group
         if (this.groupedRows) {
-            styles['width'] = this.columnGroupWidths.total;
+            styles["width"] = this.columnGroupWidths.total;
         }
         if (this.scrollbarV && this.virtualization) {
             var idx = 0;
@@ -393,7 +404,7 @@ var DataTableBodyComponent = /** @class */ (function () {
         if (!this.scrollbarV || !this.rows || !this.rows.length) {
             return null;
         }
-        var styles = { position: 'absolute' };
+        var styles = { position: "absolute" };
         var pos = this.rowHeightsCache.query(this.rows.length - 1);
         utils_1.translateXY(styles, 0, pos);
         return styles;
@@ -433,7 +444,9 @@ var DataTableBodyComponent = /** @class */ (function () {
             if (!this.externalPaging) {
                 first = Math.max(this.offset * this.pageSize, 0);
             }
-            last = Math.min(first + this.pageSize, this.rowCount);
+            last = this._treeRowsCount
+                ? this._treeRowsCount
+                : Math.min(first + this.pageSize, this.rowCount);
         }
         this.indexes = { first: first, last: last };
     };
@@ -457,7 +470,7 @@ var DataTableBodyComponent = /** @class */ (function () {
                 externalVirtual: this.scrollbarV && this.externalPaging,
                 rowCount: this.rowCount,
                 rowIndexes: this.rowIndexes,
-                rowExpansions: this.rowExpansions
+                rowExpansions: this.rowExpansions,
             });
         }
     };
@@ -499,7 +512,7 @@ var DataTableBodyComponent = /** @class */ (function () {
         this.rowExpansions.set(row, expanded);
         this.detailToggle.emit({
             rows: [row],
-            currentIndex: viewPortFirstRowIndex
+            currentIndex: viewPortFirstRowIndex,
         });
     };
     /**
@@ -522,7 +535,7 @@ var DataTableBodyComponent = /** @class */ (function () {
         // Emit all rows that have been expanded.
         this.detailToggle.emit({
             rows: this.rows,
-            currentIndex: viewPortFirstRowIndex
+            currentIndex: viewPortFirstRowIndex,
         });
     };
     /**
@@ -546,13 +559,13 @@ var DataTableBodyComponent = /** @class */ (function () {
         var widths = this.columnGroupWidths;
         var offsetX = this.offsetX;
         var styles = {
-            width: widths[group] + "px"
+            width: widths[group] + "px",
         };
-        if (group === 'left') {
+        if (group === "left") {
             utils_1.translateXY(styles, offsetX, 0);
         }
-        else if (group === 'right') {
-            var bodyWidth = parseInt(this.innerWidth + '', 0);
+        else if (group === "right") {
+            var bodyWidth = parseInt(this.innerWidth + "", 0);
             var totalDiff = widths.total - bodyWidth;
             var offsetDiff = totalDiff - offsetX;
             var offset = offsetDiff * -1;
@@ -682,6 +695,11 @@ var DataTableBodyComponent = /** @class */ (function () {
         core_1.Input(),
         __metadata("design:type", Number),
         __metadata("design:paramtypes", [Number])
+    ], DataTableBodyComponent.prototype, "treeRowsCount", null);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", Number),
+        __metadata("design:paramtypes", [Number])
     ], DataTableBodyComponent.prototype, "pageSize", null);
     __decorate([
         core_1.Input(),
@@ -704,13 +722,13 @@ var DataTableBodyComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [Number])
     ], DataTableBodyComponent.prototype, "rowCount", null);
     __decorate([
-        core_1.HostBinding('style.width'),
+        core_1.HostBinding("style.width"),
         __metadata("design:type", String),
         __metadata("design:paramtypes", [])
     ], DataTableBodyComponent.prototype, "bodyWidth", null);
     __decorate([
         core_1.Input(),
-        core_1.HostBinding('style.height'),
+        core_1.HostBinding("style.height"),
         __metadata("design:type", Object),
         __metadata("design:paramtypes", [Object])
     ], DataTableBodyComponent.prototype, "bodyHeight", null);
@@ -748,12 +766,12 @@ var DataTableBodyComponent = /** @class */ (function () {
     ], DataTableBodyComponent.prototype, "scroller", void 0);
     DataTableBodyComponent = __decorate([
         core_1.Component({
-            selector: 'datatable-body',
+            selector: "datatable-body",
             template: "\n    <datatable-selection\n      #selector\n      [selected]=\"selected\"\n      [rows]=\"rows\"\n      [selectCheck]=\"selectCheck\"\n      [selectEnabled]=\"selectEnabled\"\n      [selectionType]=\"selectionType\"\n      [rowIdentity]=\"rowIdentity\"\n      (select)=\"select.emit($event)\"\n      (activate)=\"activate.emit($event)\"\n    >\n      <datatable-progress *ngIf=\"loadingIndicator\"> </datatable-progress>\n      <datatable-scroller\n        *ngIf=\"rows?.length\"\n        [scrollbarV]=\"scrollbarV\"\n        [scrollbarH]=\"scrollbarH\"\n        [scrollHeight]=\"scrollHeight\"\n        [scrollWidth]=\"columnGroupWidths?.total\"\n        (scroll)=\"onBodyScroll($event)\"\n      >\n        <datatable-summary-row\n          *ngIf=\"summaryRow && summaryPosition === 'top'\"\n          [rowHeight]=\"summaryHeight\"\n          [offsetX]=\"offsetX\"\n          [innerWidth]=\"innerWidth\"\n          [rows]=\"rows\"\n          [columns]=\"columns\"\n        >\n        </datatable-summary-row>\n        <datatable-row-wrapper\n          [groupedRows]=\"groupedRows\"\n          *ngFor=\"let group of temp; let i = index; trackBy: rowTrackingFn\"\n          [innerWidth]=\"innerWidth\"\n          [ngStyle]=\"getRowsStyles(group)\"\n          [rowDetail]=\"rowDetail\"\n          [groupHeader]=\"groupHeader\"\n          [offsetX]=\"offsetX\"\n          [detailRowHeight]=\"getDetailRowHeight(group[i], i)\"\n          [row]=\"group\"\n          [expanded]=\"getRowExpanded(group)\"\n          [rowIndex]=\"getRowIndex(group[i])\"\n          (rowContextmenu)=\"rowContextmenu.emit($event)\"\n        >\n          <datatable-body-row\n            *ngIf=\"!groupedRows; else groupedRowsTemplate\"\n            tabindex=\"-1\"\n            [isSelected]=\"selector.getRowSelected(group)\"\n            [innerWidth]=\"innerWidth\"\n            [offsetX]=\"offsetX\"\n            [columns]=\"columns\"\n            [rowHeight]=\"getRowHeight(group)\"\n            [row]=\"group\"\n            [rowIndex]=\"getRowIndex(group)\"\n            [expanded]=\"getRowExpanded(group)\"\n            [rowClass]=\"rowClass\"\n            [displayCheck]=\"displayCheck\"\n            [treeStatus]=\"group.treeStatus\"\n            (treeAction)=\"onTreeAction(group)\"\n            (activate)=\"selector.onActivate($event, indexes.first + i)\"\n          >\n          </datatable-body-row>\n          <ng-template #groupedRowsTemplate>\n            <datatable-body-row\n              *ngFor=\"\n                let row of group.value;\n                let i = index;\n                trackBy: rowTrackingFn\n              \"\n              tabindex=\"-1\"\n              [isSelected]=\"selector.getRowSelected(row)\"\n              [innerWidth]=\"innerWidth\"\n              [offsetX]=\"offsetX\"\n              [columns]=\"columns\"\n              [rowHeight]=\"getRowHeight(row)\"\n              [row]=\"row\"\n              [group]=\"group.value\"\n              [rowIndex]=\"getRowIndex(row)\"\n              [expanded]=\"getRowExpanded(row)\"\n              [rowClass]=\"rowClass\"\n              (activate)=\"selector.onActivate($event, i)\"\n            >\n            </datatable-body-row>\n          </ng-template>\n        </datatable-row-wrapper>\n        <datatable-summary-row\n          *ngIf=\"summaryRow && summaryPosition === 'bottom'\"\n          [ngStyle]=\"getBottomSummaryRowStyles()\"\n          [rowHeight]=\"summaryHeight\"\n          [offsetX]=\"offsetX\"\n          [innerWidth]=\"innerWidth\"\n          [rows]=\"rows\"\n          [columns]=\"columns\"\n        >\n        </datatable-summary-row>\n      </datatable-scroller>\n      <div\n        class=\"empty-row\"\n        *ngIf=\"!rows?.length && !loadingIndicator\"\n        [innerHTML]=\"emptyMessage\"\n      ></div>\n    </datatable-selection>\n  ",
             changeDetection: core_1.ChangeDetectionStrategy.OnPush,
             host: {
-                class: 'datatable-body'
-            }
+                class: "datatable-body",
+            },
         }),
         __metadata("design:paramtypes", [core_1.ChangeDetectorRef])
     ], DataTableBodyComponent);
